@@ -27,26 +27,26 @@ class Sudoku:
             line = file.read().replace(' ', '').replace('\n', '')
             return Sudoku(line)
 
-    def row_idx(self, i):
+    def row(self, i):
         return i // 9
 
-    def column_idx(self, i):
+    def col(self, i):
         return i % 9
 
-    def block_idx(self, i):
-        return self.row_idx(i) // 3 * 3 + self.column_idx(i) // 3
+    def blk(self, i):
+        return self.row(i) // 3 * 3 + self.col(i) // 3
 
-    def is_in_row(self, i, v):
+    def in_row(self, i, v):
         for j in range(9):
             if self.grid[i * 9 + j] == v: return True
         return False
 
-    def is_in_col(self, i, v):
+    def in_col(self, i, v):
         for j in range(9):
             if self.grid[j * 9 + i] == v: return True
         return False
 
-    def is_in_blk(self, i, v):
+    def in_blk(self, i, v):
         b = 9 * (i - i % 3) + (i % 3 * 3)
         for j in range(3):
             for k in range(3):
@@ -60,7 +60,7 @@ class Sudoku:
         i = self.grid.index(0)
 
         for c in range(1, 10):
-            if not self.is_in_row(self.row_idx(i), c) and not self.is_in_col(self.column_idx(i), c) and not self.is_in_blk(self.block_idx(i), c):
+            if not self.in_row(self.row(i), c) and not self.in_col(self.col(i), c) and not self.in_blk(self.blk(i), c):
                 self.grid[i] = c
                 if self.solve():
                     return True
