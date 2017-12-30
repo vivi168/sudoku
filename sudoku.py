@@ -4,6 +4,7 @@ import argparse
 class Sudoku:
   def __init__(self, s):
     self.grid = [int(i) for i in s]
+    self.possible_values = []
 
   def __str__(self):
     s = ''
@@ -53,13 +54,25 @@ class Sudoku:
         if self.grid[j * 9 + k + b] == v: return True
     return False
 
+  def find_possible_values(self):
+    for i in range(81):
+      if self.grid[i] == 0:
+        pv = []
+        for v in range(1,10):
+          if not self.in_row(self.row(i), v) and not self.in_col(self.col(i), v) and not self.in_blk(self.blk(i), v):
+            pv.append(v)
+
+        self.possible_values.append(pv)
+      else:
+        self.possible_values.append([])
+
   def solve(self):
     if 0 not in self.grid:
       return True
 
     i = self.grid.index(0)
 
-    for c in range(1, 10):
+    for c in self.possible_values[i]:
       if not self.in_row(self.row(i), c) and not self.in_col(self.col(i), c) and not self.in_blk(self.blk(i), c):
         self.grid[i] = c
         if self.solve():
@@ -78,5 +91,6 @@ if __name__ == '__main__':
   s = Sudoku.from_file(args.file_name)
 
   print(s)
+  s.find_possible_values()
   s.solve()
   print(s)
